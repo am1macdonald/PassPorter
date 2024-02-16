@@ -32,6 +32,12 @@ class SigninResolver:
                                                             "email": email})
         user = User(conn=self.conn, email=email)
         user_value: DBUser = user.get_user()
+        if user_value.attempts > 3:
+            return self.templates.TemplateResponse(request=self.request,
+                                                   name='forms/sign-in.jinja2',
+                                                   context={"to_extend": 'empty.jinja2', "invalid_email": 1,
+                                                            "error_message": "Account locked: Too many attempts",
+                                                            "email": email})
         if not user_value:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
@@ -40,6 +46,7 @@ class SigninResolver:
                                                             "email": email})
 
         if not self._check_password(password, user_value.password_hash):
+            user.add_attempt()
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
                                                    context={"to_extend": 'empty.jinja2', "invalid_password": 1,
@@ -47,6 +54,7 @@ class SigninResolver:
                                                             "email": email})
 
         token = user.get_token()
+        user.update_login_time()
         client_id = self.request.query_params.get("client_id")
         if client_id:
             redirect_url = f"/consent?{self.request.query_params}"
@@ -55,4 +63,4 @@ class SigninResolver:
             return response
 
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
-                                               context={"message": f"Welcome {user.username}!"})
+                                               context={"message": f"Welcome {user_value.username}!"})
