@@ -96,6 +96,60 @@ class User:
     def get_id(self):
         return self.user.user_id
 
+    def add_attempt(self):
+        cur = self._conn.cursor()
+        sql = '''
+        UPDATE public.login_attempts
+        SET attempts=attempts + 1
+        WHERE user_id=%s
+        RETURNING *; 
+        '''
+        vals = (self.user.user_id,)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            self._conn.commit()
+            return True
+        else:
+            self._conn.rollback()
+            return False
+
+    def reset_attempts(self):
+        cur = self._conn.cursor()
+        sql = '''
+        UPDATE public.login_attempts
+        SET attempts=0
+        WHERE user_id=%s
+        RETURNING *; 
+        '''
+        vals = (self.user.user_id,)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            self._conn.commit()
+            return True
+        else:
+            self._conn.rollback()
+            return False
+
+    def update_login_time(self):
+        cur = self._conn.cursor()
+        sql = '''
+        UPDATE public.users
+        SET last_login=now()
+        WHERE user_id=%s
+        RETURNING *;
+        '''
+        vals = (self.user.user_id,)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            self._conn.commit()
+            return True
+        else:
+            self._conn.rollback()
+            return False
+
     def _fetch(self):
         cur = self._conn.cursor()
         sql = ''
