@@ -12,13 +12,15 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    return {'message': 'wow'}
+    return templates.TemplateResponse(request=request, name="index.jinja2")
+
 
 @app.get("/sign-up", response_class=HTMLResponse)
 async def signup_page(request: Request):
-    return templates.TemplateResponse(request=request, name="forms/signup.jinja2")
+    return templates.TemplateResponse(request=request, name="forms/sign-up.jinja2")
+
 
 @app.post("/sign-up", response_class=HTMLResponse)
 async def signup_response(request):
@@ -27,14 +29,16 @@ async def signup_response(request):
 
 
 @app.get("/sign-in", response_class=HTMLResponse)
-async def say_hello():
-    with open("templates/fragments/floater.html", 'r') as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content)
+async def sign_in(request: Request):
+    return templates.TemplateResponse(request=request, name="forms/sign-in.jinja2")
+
+
+@app.get("/forgot-password", response_class=HTMLResponse)
+async def forgot_password(request: Request):
+    return templates.TemplateResponse(request=request, name="forms/forgot-password.jinja2")
 
 
 @app.get("/reset-password", response_class=HTMLResponse)
-async def say_hello():
-    with open("templates/fragments/floater.html", 'r') as f:
-        html_content = f.read()
-    return HTMLResponse(content=html_content)
+async def reset_password(request: Request):
+    return templates.TemplateResponse(request=request, name="forms/reset-password.jinja2")
+
