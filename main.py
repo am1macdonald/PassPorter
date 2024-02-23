@@ -1,12 +1,15 @@
 from typing import Annotated
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from pydantic import EmailStr, SecretStr
 
 from resolvers.Sign_Up import SignupResolver
 
+load_dotenv()
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -25,10 +28,9 @@ async def signup_page(request: Request):
 
 
 @app.post("/sign-up", response_class=HTMLResponse)
-async def signup_response(email: Annotated[str, Form()], password: Annotated[str, Form()],
-                          confirm: Annotated[str, Form()], request: Request):
-    SignupResolver(request)
-    print(email)
+async def signup_response(email: Annotated[EmailStr, Form()], password: Annotated[SecretStr, Form()],
+                          confirm: Annotated[SecretStr, Form()], request: Request):
+    SignupResolver(email, password, confirm)
     return templates.TemplateResponse(request=request, name="views/signup_success.jinja2")
 
 
