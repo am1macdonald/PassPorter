@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Add high-level routes and set up templating">
-      <change afterPath="$PROJECT_DIR$/templates/views/signup_success.jinja2" afterDir="false" />
+    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Tighten up views and start post route for sign up">
+      <change afterPath="$PROJECT_DIR$/controllers/DatabaseController.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controllers/EncryptionController.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/User.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resolvers/Signup.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_Up.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resolvers/Sign_Up.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_Up.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/output.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/sign-in.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/sign-in.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/sign-up.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/sign-up.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.jinja2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +23,9 @@
       <list>
         <option value="FastAPI main" />
         <option value="FastAPI test_main" />
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -70,7 +68,7 @@
       <recent name="$PROJECT_DIR$/app" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.tail">
+  <component name="RunManager" selected="FastAPI.PassPorter">
     <configuration name="PassPorter" type="Python.FastAPI">
       <option name="file" value="$PROJECT_DIR$/main.py" />
       <module name="PassPorter" />
@@ -127,7 +125,8 @@
       <workItem from="1708517604792" duration="2727000" />
       <workItem from="1708604268257" duration="970000" />
       <workItem from="1708605262851" duration="1428000" />
-      <workItem from="1708650152828" duration="4664000" />
+      <workItem from="1708650152828" duration="5368000" />
+      <workItem from="1708689743776" duration="1964000" />
     </task>
     <task id="LOCAL-00001" summary="Setup and Config">
       <option name="closed" value="true" />
@@ -145,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708520230524</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Tighten up views and start post route for sign up">
+      <option name="closed" value="true" />
+      <created>1708654914968</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1708654914968</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,9 +172,10 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Setup and Config" />
     <MESSAGE value="Add high-level routes and set up templating" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add high-level routes and set up templating" />
+    <MESSAGE value="Tighten up views and start post route for sign up" />
+    <option name="LAST_COMMIT_MESSAGE" value="Tighten up views and start post route for sign up" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PassPorter$PassPorter.coverage" NAME="PassPorter Coverage Results" MODIFIED="1708650159763" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/PassPorter$PassPorter.coverage" NAME="PassPorter Coverage Results" MODIFIED="1708690313981" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
