@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Request
+from typing import Annotated
+
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from resolvers.Signup import signup
+from resolvers.Sign_Up import SignupResolver
 
 app = FastAPI()
 
@@ -23,9 +25,11 @@ async def signup_page(request: Request):
 
 
 @app.post("/sign-up", response_class=HTMLResponse)
-async def signup_response(request):
-    signup(request)
-    return {"message": "success"}
+async def signup_response(email: Annotated[str, Form()], password: Annotated[str, Form()],
+                          confirm: Annotated[str, Form()], request: Request):
+    SignupResolver(request)
+    print(email)
+    return templates.TemplateResponse(request=request, name="views/signup_success.jinja2")
 
 
 @app.get("/sign-in", response_class=HTMLResponse)
@@ -41,4 +45,3 @@ async def forgot_password(request: Request):
 @app.get("/reset-password", response_class=HTMLResponse)
 async def reset_password(request: Request):
     return templates.TemplateResponse(request=request, name="forms/reset-password.jinja2")
-

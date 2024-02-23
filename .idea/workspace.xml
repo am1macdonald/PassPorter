@@ -5,16 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Add high-level routes and set up templating">
-      <change afterPath="$PROJECT_DIR$/static/images/heroImage.webp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/forms/sign-in.jinja2" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/forms/sign-up.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/PassPorter.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/PassPorter.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/views/signup_success.jinja2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resolvers/Signup.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_Up.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/output.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/signup.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/sign-in.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/sign-in.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/sign-up.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/sign-up.jinja2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.jinja2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,8 +26,8 @@
       <list>
         <option value="FastAPI main" />
         <option value="FastAPI test_main" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -44,33 +43,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultHtmlFileTemplate": "HTML File",
-    "FastAPI.PassPorter.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/adam/PycharmProjects/PassPorter/templates/forms",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "npm.tail.executor": "Run",
-    "settings.editor.selected.configurable": "configurable.tailwindcss"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;FastAPI.PassPorter.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/adam/PycharmProjects/PassPorter/templates/forms&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.tail.executor&quot;: &quot;Run&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.tailwindcss&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/templates/forms" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates/views" />
       <recent name="$PROJECT_DIR$/static/images" />
       <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/app" />
     </key>
   </component>
-  <component name="RunManager" selected="FastAPI.PassPorter">
+  <component name="RunManager" selected="npm.tail">
     <configuration name="PassPorter" type="Python.FastAPI">
       <option name="file" value="$PROJECT_DIR$/main.py" />
       <module name="PassPorter" />
@@ -127,6 +127,7 @@
       <workItem from="1708517604792" duration="2727000" />
       <workItem from="1708604268257" duration="970000" />
       <workItem from="1708605262851" duration="1428000" />
+      <workItem from="1708650152828" duration="4664000" />
     </task>
     <task id="LOCAL-00001" summary="Setup and Config">
       <option name="closed" value="true" />
@@ -167,6 +168,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Add high-level routes and set up templating" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PassPorter$PassPorter.coverage" NAME="PassPorter Coverage Results" MODIFIED="1708606494926" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/PassPorter$PassPorter.coverage" NAME="PassPorter Coverage Results" MODIFIED="1708650159763" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
   </component>
 </project>
