@@ -8,5 +8,5 @@ env = Environment(
 template = env.get_template("index.jinja2")
 
 
-def get_thing(resource: str):
+def get_template(resource: str):
     return env.get_template(resource)

@@ -5,7 +5,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pydantic import EmailStr, SecretStr
+from pydantic import SecretStr
 
 from resolvers.Sign_Up import SignupResolver
 
@@ -24,14 +24,14 @@ async def root(request: Request):
 
 @app.get("/sign-up", response_class=HTMLResponse)
 async def signup_page(request: Request):
-    return templates.TemplateResponse(request=request, name="forms/sign-up.jinja2")
+    return templates.TemplateResponse(request=request, name="forms/sign-up.jinja2",
+                                      context={"to_extend": 'index.jinja2'})
 
 
 @app.post("/sign-up", response_class=HTMLResponse)
-async def signup_response(email: Annotated[EmailStr, Form()], password: Annotated[SecretStr, Form()],
+async def signup_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()],
                           confirm: Annotated[SecretStr, Form()], request: Request):
-    SignupResolver(email, password, confirm)
-    return templates.TemplateResponse(request=request, name="views/signup_success.jinja2")
+    return SignupResolver(request, templates).resolve(email, password, confirm)
 
 
 @app.get("/sign-in", response_class=HTMLResponse)
