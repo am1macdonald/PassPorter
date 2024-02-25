@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import SecretStr
 
+from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
 
@@ -47,8 +48,13 @@ async def sign_response(email: Annotated[str, Form()], password: Annotated[Secre
 
 
 @app.get("/forgot-password", response_class=HTMLResponse)
-async def forgot_password(request: Request):
+async def forgot_password_page(request: Request):
     return templates.TemplateResponse(request=request, name="forms/forgot-password.jinja2")
+
+
+@app.post("/forgot-password", response_class=HTMLResponse)
+async def forgot_password_response(email: Annotated[str, Form()], request: Request):
+    return PasswordResetResolver(request, templates).resolve(email)
 
 
 @app.get("/reset-password", response_class=HTMLResponse)
