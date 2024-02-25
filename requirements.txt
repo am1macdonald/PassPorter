@@ -1,0 +1,6 @@
+pydantic~=2.6.1
+bcrypt~=4.1.2
+python-dotenv~=1.0.1
+fastapi~=0.109.2
+psycopg2~=2.9.9
+Jinja2~=3.1.3

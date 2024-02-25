@@ -4,23 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Implement password reset requests">
-      <change afterPath="$PROJECT_DIR$/models/BaseDBModel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/PasswordResetToken.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/models/tests/User.test.py" afterDir="false" />
+    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Implement password reset resetting">
+      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/DatabaseController.test.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/tests/DatabaseController.test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/PasswordReset.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/PasswordReset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/SignupPassword.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/Password.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/User.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/User.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resolvers/ResetPassword.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/ResetPassword.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resolvers/Sign_In.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_In.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resolvers/Sign_Up.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_Up.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/output.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/views/success.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/views/success.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +28,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -61,7 +52,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/adam/PycharmProjects/PassPorter/models",
+    "last_opened_file_path": "/home/adam/PycharmProjects/PassPorter",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -71,6 +62,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/models" />
       <recent name="$PROJECT_DIR$/resolvers" />
       <recent name="$PROJECT_DIR$/templates" />
@@ -140,7 +132,7 @@
       <workItem from="1708689743776" duration="3139000" />
       <workItem from="1708737918643" duration="4347000" />
       <workItem from="1708788614636" duration="28445000" />
-      <workItem from="1708879813103" duration="13941000" />
+      <workItem from="1708879813103" duration="15059000" />
     </task>
     <task id="LOCAL-00001" summary="Setup and Config">
       <option name="closed" value="true" />
@@ -222,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708882458386</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Implement password reset resetting">
+      <option name="closed" value="true" />
+      <created>1708894525480</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1708894525480</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,7 +250,8 @@
     <MESSAGE value="Implement user signup" />
     <MESSAGE value="Implement user signin" />
     <MESSAGE value="Implement password reset requests" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement password reset requests" />
+    <MESSAGE value="Implement password reset resetting" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement password reset resetting" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
