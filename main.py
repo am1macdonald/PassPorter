@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import SecretStr
 
+from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
 
 load_dotenv()
@@ -35,8 +36,14 @@ async def signup_response(email: Annotated[str, Form()], password: Annotated[Sec
 
 
 @app.get("/sign-in", response_class=HTMLResponse)
-async def sign_in(request: Request):
-    return templates.TemplateResponse(request=request, name="forms/sign-in.jinja2")
+async def sign_page(request: Request):
+    return templates.TemplateResponse(request=request, name="forms/sign-in.jinja2",
+                                      context={"to_extend": "index.jinja2"})
+
+
+@app.post("/sign-in", response_class=HTMLResponse)
+async def sign_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()], request: Request):
+    return SigninResolver(request, templates).resolve(email, password)
 
 
 @app.get("/forgot-password", response_class=HTMLResponse)

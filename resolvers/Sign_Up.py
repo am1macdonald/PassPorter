@@ -1,10 +1,10 @@
 from email_validator import validate_email, EmailNotValidError
 from fastapi import Request
-from pydantic import EmailStr, field_validator, ValidationError
+from pydantic import EmailStr, ValidationError
 from pydantic import SecretStr
 
 from models.SignupPassword import SignupPassword
-from models.User import NewUser
+from models.User import UserRegistration
 
 
 class SignupResolver:
@@ -39,5 +39,6 @@ class SignupResolver:
                 context={"to_extend": 'empty.jinja2', "error": 1,
                          "error_message": message,
                          "invalid_password": 1, "email": email})
-        NewUser(email, password).add()
-        return self.templates.TemplateResponse(request=self.request, name="views/signup_success.jinja2")
+        UserRegistration(email, password).add()
+        return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
+                                               context={"message": "A confirmation email has been sent to your inbox."})

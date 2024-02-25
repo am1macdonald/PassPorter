@@ -9,9 +9,6 @@ class DatabaseController:
         self.connection = None
         self.cursor = None
 
-        # Get all table names
-        self.connect()
-
     def connect(self):
         self.connection = psycopg2.connect(dbname=os.environ["PG_DATABASE"],
                                            user=os.environ["PG_USER"],
@@ -35,8 +32,18 @@ class DatabaseController:
             self.connection.rollback()
         return one
 
-    def select(self, columns, table):
-        self.cursor.execute(f"SELECT {', '.join(columns)} from {table}")
+    def select(self, table, columns: [str], vals: tuple, joins: [str] = None, wheres: [str] = None):
+        sql = f'SELECT {", ".join(columns)} from "{table}" '
+        if joins:
+            sql += " join " + ' '.join(joins)
+        if wheres:
+            sql += " where " + ' '.join(wheres)
+        self.cursor.execute(sql.strip() + ';', vals)
+        return self.cursor.fetchall()
+
+    def arbitrary(self, sql: str, vals: tuple):
+        self.cursor.execute(sql, vals)
+        return self.cursor.fetchall()
 
     def disconnect(self):
         self.cursor.close()
