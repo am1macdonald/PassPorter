@@ -5,6 +5,7 @@ import bcrypt
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 from controllers.DatabaseController import DatabaseController
+from models.BaseDBModel import DBModel
 
 
 class NewUserInputModel(BaseModel):
@@ -12,7 +13,8 @@ class NewUserInputModel(BaseModel):
     email: EmailStr = Field()
 
 
-class DBUser(BaseModel):
+class DBUser(DBModel):
+    user_id: int
     username: str
     email: EmailStr
     password_hash: SecretStr
@@ -20,17 +22,15 @@ class DBUser(BaseModel):
     verification_status: bool
     attempts: int
 
-    @classmethod
-    def from_list(cls, tpl):
-        return cls(**{k: v for k, v in zip(cls.__fields__.keys(), tpl)})
 
-
-class UserRegistration:
-    def __init__(self, email, password: SecretStr):
+class User:
+    def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None):
         self.email = email
-        self.username = self._create_username(email)
-        self.password = self._hash_password(password.get_secret_value())
+        self.username = self._create_username(email) if email else None
+        self.password = self._hash_password(password.get_secret_value()) if password else None
+        self.user_id = user_id
         self.db = DatabaseController()
+        self.user: DBUser = self._fetch()
 
     @staticmethod
     def _hash_password(password):
@@ -44,48 +44,90 @@ class UserRegistration:
         self.db.connect()
         user = self.db.insert('users', ['username', 'password_hash', 'email'],
                               (self.username, self.password, self.email))
-        self.db.insert('email_verification',
-                       ['user_id'], (user[0],))
+        self.db.insert('email_verification', ['user_id'], (user[0],))
         self.db.disconnect()
 
+    def update_password(self, password: SecretStr):
+        self.db.connect()
+        sql = '''
+        UPDATE public.users
+        SET password_hash=%s
+        WHERE user_id=%s
+        RETURNING password_hash; 
+        '''
+        vals = (self._hash_password(password.get_secret_value()), self.user.user_id,)
+        res = self.db.arbitrary(sql, vals)
+        if bcrypt.checkpw(password.get_secret_value().encode(), res[0][0].encode()):
+            self.db.commit()
+            return True
+        else:
+            self.db.rollback()
+            return False
 
-class UserLogin:
-    def __init__(self, email: EmailStr):
-        self.email = email
-        self.db = DatabaseController()
-        try:
-            self.user = DBUser.from_list(self._fetch(email))
-        except Exception as e:
-            print(e)
-            self.user = None
-
-    def get_user(self) -> DBUser:
+    def get_user(self):
         return self.user
 
-    def _fetch(self, email: EmailStr):
+    def _fetch(self):
         self.db.connect()
-        return self.db.arbitrary(f'''
-        select
-            users.username,
-            users.email,
-            users.password_hash,
-            users.last_login,
-            (
+        sql = ''
+        vals = None
+        if self.email:
+            sql = f'''
             select
-                email_verification.verification_status
+                users.user_id,
+                users.username,
+                users.email,
+                users.password_hash,
+                users.last_login,
+                (
+                select
+                    email_verification.verification_status
+                from
+                    email_verification
+                where
+                    email_verification.user_id = users.user_id) as verification_status,
+                (
+                select
+                    login_attempts.attempts
+                from
+                    login_attempts
+                where
+                    login_attempts.user_id = users.user_id) as attempts
             from
-                email_verification
+                users
             where
-                email_verification.user_id = users.user_id) as verification_status,
-            (
+                users.email = %s
+                    '''
+            vals = (self.email,)
+        elif self.user_id:
+            sql = f'''
             select
-                login_attempts.attempts
+                users.user_id,
+                users.username,
+                users.email,
+                users.password_hash,
+                users.last_login,
+                (
+                select
+                    email_verification.verification_status
+                from
+                    email_verification
+                where
+                    email_verification.user_id = users.user_id) as verification_status,
+                (
+                select
+                    login_attempts.attempts
+                from
+                    login_attempts
+                where
+                    login_attempts.user_id = users.user_id) as attempts
             from
-                login_attempts
+                users
             where
-                login_attempts.user_id = users.user_id) as attempts
-        from
-            users
-        where
-            users.email = %s 
-                ''', (email,))[0]
+                users.user_id = %s
+                    '''
+            vals = (self.user_id,)
+
+        user = DBUser.from_list(self.db.arbitrary(sql, vals)[0]) if sql != '' else None
+        self.db.disconnect()
+        return user

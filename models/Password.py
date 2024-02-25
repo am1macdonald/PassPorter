@@ -1,7 +1,7 @@
 from pydantic import BaseModel, SecretStr, field_validator, ValidationError
 
 
-class SignupPassword(BaseModel):
+class Password(BaseModel):
     password: SecretStr
 
     @field_validator('password')
@@ -14,4 +14,6 @@ class SignupPassword(BaseModel):
             raise ValueError('Password should contain at least one digit')
         if not any(char.isalpha() for char in unwrapped_password):
             raise ValueError('Password should contain at least one letter')
+        if not any(not char.isalnum() for char in unwrapped_password):
+            raise ValueError('Password should contain at least one symbol')
         return password

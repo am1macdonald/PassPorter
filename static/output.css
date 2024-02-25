@@ -773,6 +773,11 @@ select {
   height: 12rem;
 }
 
+.size-0 {
+  width: 0px;
+  height: 0px;
+}
+
 .h-full {
   height: 100%;
 }
@@ -829,6 +834,10 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .rounded-md {

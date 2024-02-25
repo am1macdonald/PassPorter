@@ -4,14 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Implement user signin">
-      <change afterPath="$PROJECT_DIR$/models/PasswordReset.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resolvers/ResetPassword.py" afterDir="false" />
+    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Implement password reset requests">
+      <change afterPath="$PROJECT_DIR$/models/BaseDBModel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/PasswordResetToken.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/tests/User.test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/DatabaseController.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/DatabaseController.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/DatabaseController.test.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/tests/DatabaseController.test.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/PasswordReset.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/PasswordReset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/SignupPassword.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/Password.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/User.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/User.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resolvers/ResetPassword.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/ResetPassword.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resolvers/Sign_In.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_In.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resolvers/Sign_Up.py" beforeDir="false" afterPath="$PROJECT_DIR$/resolvers/Sign_Up.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/static/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/output.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/forgot-password.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/reset-password.jinja2" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/views/success.jinja2" beforeDir="false" afterPath="$PROJECT_DIR$/templates/views/success.jinja2" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,23 +50,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;FastAPI.PassPorter.executor&quot;: &quot;Debug&quot;,
-    &quot;Python tests.Python tests in DatabaseController.test.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python.DatabaseController.test.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/adam/PycharmProjects/PassPorter/models&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.tail.executor&quot;: &quot;Run&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;configurable.tailwindcss&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "FastAPI.PassPorter.executor": "Debug",
+    "Python tests.Python tests in DatabaseController.test.py.executor": "Run",
+    "Python tests.Python tests in User.test.py.executor": "Run",
+    "Python.DatabaseController.test.executor": "Run",
+    "Python.User.test.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/home/adam/PycharmProjects/PassPorter/models",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.tail.executor": "Run",
+    "settings.editor.selected.configurable": "configurable.tailwindcss"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/models" />
@@ -66,37 +77,14 @@
       <recent name="$PROJECT_DIR$/templates/forms" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/controllers/test" />
+      <recent name="$PROJECT_DIR$/models/tests" />
       <recent name="$PROJECT_DIR$/controllers" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/templates/views" />
-      <recent name="$PROJECT_DIR$/static/images" />
-      <recent name="$PROJECT_DIR$/templates" />
     </key>
   </component>
   <component name="RunManager" selected="FastAPI.PassPorter">
-    <configuration name="DatabaseController.test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="PassPorter" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/controllers" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/controllers/DatabaseController.test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="PassPorter" type="Python.FastAPI">
       <option name="file" value="$PROJECT_DIR$/main.py" />
       <module name="PassPorter" />
@@ -128,28 +116,6 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="Python tests in DatabaseController.test.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
-      <module name="PassPorter" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/controllers" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;$PROJECT_DIR$/controllers/DatabaseController.test.py&quot;" />
-      <option name="_new_targetType" value="&quot;PATH&quot;" />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.DatabaseController.test" />
-        <item itemvalue="Python tests.Python tests in DatabaseController.test.py" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -174,7 +140,7 @@
       <workItem from="1708689743776" duration="3139000" />
       <workItem from="1708737918643" duration="4347000" />
       <workItem from="1708788614636" duration="28445000" />
-      <workItem from="1708879813103" duration="2290000" />
+      <workItem from="1708879813103" duration="13941000" />
     </task>
     <task id="LOCAL-00001" summary="Setup and Config">
       <option name="closed" value="true" />
@@ -248,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708825418847</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Implement password reset requests">
+      <option name="closed" value="true" />
+      <created>1708882458386</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1708882458386</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -275,27 +249,39 @@
     <MESSAGE value="Minor updates" />
     <MESSAGE value="Implement user signup" />
     <MESSAGE value="Implement user signin" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement user signin" />
+    <MESSAGE value="Implement password reset requests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement password reset requests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/resolvers/Sign_Up.py</url>
-          <line>14</line>
-          <option name="timeStamp" value="13" />
+          <url>file://$PROJECT_DIR$/resolvers/ResetPassword.py</url>
+          <line>33</line>
+          <option name="timeStamp" value="35" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/resolvers/ResetPassword.py</url>
-          <line>26</line>
-          <option name="timeStamp" value="32" />
+          <line>37</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/User.py</url>
+          <line>50</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/resolvers/ResetPassword.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/PassPorter$.coverage" NAME=" Coverage Results" MODIFIED="1708808866510" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers" />
-    <SUITE FILE_PATH="coverage/PassPorter$PassPorter.coverage" NAME="PassPorter Coverage Results" MODIFIED="1708880006573" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/PassPorter$.coverage" NAME=" Coverage Results" MODIFIED="1708890176084" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models/tests" />
+    <SUITE FILE_PATH="coverage/PassPorter$PassPorter.coverage" NAME="PassPorter Coverage Results" MODIFIED="1708894243490" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/PassPorter$User_test.coverage" NAME="User.test Coverage Results" MODIFIED="1708890160508" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/models/tests" />
     <SUITE FILE_PATH="coverage/PassPorter$DatabaseController_test.coverage" NAME="DatabaseController.test Coverage Results" MODIFIED="1708818331417" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/controllers" />
   </component>
 </project>

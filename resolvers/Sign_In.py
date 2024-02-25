@@ -4,7 +4,7 @@ from fastapi import Request
 from pydantic import EmailStr
 from pydantic import SecretStr
 
-from models.User import UserLogin, DBUser
+from models.User import User, DBUser
 
 
 class SigninResolver:
@@ -27,18 +27,18 @@ class SigninResolver:
                                                             "error_message": str(e),
                                                             "email": email})
 
-        user: DBUser = UserLogin(email).get_user()
+        user: DBUser = User(email).get_user()
         if not user:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
                                                    context={"to_extend": 'empty.jinja2', "invalid_email": 1,
-                                                            "error_message": "user with this email does not exist",
+                                                            "error_message": "A user with this email does not exist",
                                                             "email": email})
         if not self._check_password(password, user.password_hash):
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
                                                    context={"to_extend": 'empty.jinja2', "invalid_password": 1,
-                                                            "error_message": "wrong password",
+                                                            "error_message": "Wrong password",
                                                             "email": email})
 
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",

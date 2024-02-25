@@ -3,8 +3,8 @@ from fastapi import Request
 from pydantic import EmailStr, ValidationError
 from pydantic import SecretStr
 
-from models.SignupPassword import SignupPassword
-from models.User import UserRegistration
+from models.Password import Password
+from models.User import User
 
 
 class SignupResolver:
@@ -27,10 +27,10 @@ class SignupResolver:
                 request=self.request,
                 name='forms/sign-up.jinja2',
                 context={"to_extend": 'empty.jinja2', "error": 1,
-                         "error_message": "passwords do not match",
+                         "error_message": "Passwords do not match",
                          "invalid_password": 1, "email": email})
         try:
-            SignupPassword(password=password)
+            Password(password=password)
         except ValidationError as e:
             message = e.errors()[0].get('msg').split(',')[1].strip()
             return self.templates.TemplateResponse(
@@ -39,6 +39,6 @@ class SignupResolver:
                 context={"to_extend": 'empty.jinja2', "error": 1,
                          "error_message": message,
                          "invalid_password": 1, "email": email})
-        UserRegistration(email, password).add()
+        User(email, password).add()
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
                                                context={"message": "A confirmation email has been sent to your inbox."})

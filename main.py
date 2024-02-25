@@ -49,14 +49,21 @@ async def sign_response(email: Annotated[str, Form()], password: Annotated[Secre
 
 @app.get("/forgot-password", response_class=HTMLResponse)
 async def forgot_password_page(request: Request):
-    return templates.TemplateResponse(request=request, name="forms/forgot-password.jinja2")
+    return templates.TemplateResponse(request=request, name="forms/forgot-password.jinja2",
+                                      context={"to_extend": "index.jinja2"})
 
 
 @app.post("/forgot-password", response_class=HTMLResponse)
 async def forgot_password_response(email: Annotated[str, Form()], request: Request):
-    return PasswordResetResolver(request, templates).resolve(email)
+    return PasswordResetResolver(request, templates).resolve_request(email)
 
 
-@app.get("/reset-password", response_class=HTMLResponse)
-async def reset_password(request: Request):
-    return templates.TemplateResponse(request=request, name="forms/reset-password.jinja2")
+@app.get("/reset-password/{token_id}", response_class=HTMLResponse)
+async def reset_password(request: Request, token_id: SecretStr):
+    return PasswordResetResolver(request, templates).resolve_get_reset(token_id)
+
+
+@app.post("/reset-password", response_class=HTMLResponse)
+async def reset_password(uuid: Annotated[SecretStr, Form()], password: Annotated[SecretStr, Form()],
+                         confirm: Annotated[SecretStr, Form()], request: Request):
+    return PasswordResetResolver(request, templates).resolve_reset_action(uuid, password, confirm)
