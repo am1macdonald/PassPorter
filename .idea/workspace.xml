@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Add JWT_Secret field">
+    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Update python requirements">
+      <change afterPath="$PROJECT_DIR$/controllers/AuthController.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +124,7 @@
       <workItem from="1708737918643" duration="4347000" />
       <workItem from="1708788614636" duration="28445000" />
       <workItem from="1708879813103" duration="15059000" />
-      <workItem from="1709034285118" duration="302000" />
+      <workItem from="1709034285118" duration="2473000" />
     </task>
     <task id="LOCAL-00001" summary="Setup and Config">
       <option name="closed" value="true" />
@@ -222,7 +222,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709034439479</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Update readme">
+      <option name="closed" value="true" />
+      <created>1709034599727</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1709034599727</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Update python requirements">
+      <option name="closed" value="true" />
+      <created>1709034801781</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1709034801781</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -252,7 +268,9 @@
     <MESSAGE value="Implement password reset requests" />
     <MESSAGE value="Implement password reset resetting" />
     <MESSAGE value="Add JWT_Secret field" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add JWT_Secret field" />
+    <MESSAGE value="Update readme" />
+    <MESSAGE value="Update python requirements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update python requirements" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
