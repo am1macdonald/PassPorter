@@ -33,6 +33,7 @@ Provide instructions on how to install your project. For example:
     pip install -r requirements.txt
    ```
 7. Create a `.env` file in the root of the project using the `.env.example` file as a template.
+   - I used `openssl rand -base64 60` in my Linux shell
 
 ## Usage
 

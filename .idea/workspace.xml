@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Implement password reset resetting">
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
+    <list default="true" id="a02c123f-4c0d-4c45-90b3-f95bbc726a4f" name="Changes" comment="Add JWT_Secret field">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +124,7 @@
       <workItem from="1708737918643" duration="4347000" />
       <workItem from="1708788614636" duration="28445000" />
       <workItem from="1708879813103" duration="15059000" />
-      <workItem from="1709034285118" duration="131000" />
+      <workItem from="1709034285118" duration="302000" />
     </task>
     <task id="LOCAL-00001" summary="Setup and Config">
       <option name="closed" value="true" />
@@ -214,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708894525480</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Add JWT_Secret field">
+      <option name="closed" value="true" />
+      <created>1709034439479</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1709034439479</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -243,7 +251,8 @@
     <MESSAGE value="Implement user signin" />
     <MESSAGE value="Implement password reset requests" />
     <MESSAGE value="Implement password reset resetting" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implement password reset resetting" />
+    <MESSAGE value="Add JWT_Secret field" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add JWT_Secret field" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
