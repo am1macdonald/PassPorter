@@ -54,6 +54,7 @@ I haven't done this yet, but I plan to use Nginx as a reverse proxy for this pro
 - [ ] Add a way to manage user roles
 - [ ] Add a way to manage user permissions
 - [ ] Add a way to manage user sessions using JWT
+- [x] Add authorization endpoint
 - [ ] Add a get token endpoint
 
 ## Contributing
