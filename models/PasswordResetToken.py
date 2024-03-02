@@ -34,7 +34,7 @@ class PasswordResetToken:
             params = (self.token_str.get_secret_value(),)
         res = self.db.arbitrary(query, params) if query else None
         self.db.disconnect()
-        return DBToken.from_list(res[0]) if res and len(res) > 0 else None
+        return DBToken.from_row(res[0]) if res and len(res) > 0 else None
 
     def exists(self) -> bool:
         return self.token is not None and self.token.is_valid
@@ -56,7 +56,7 @@ class PasswordResetToken:
             (self.user.email,))[0]
         if res:
             self.db.commit()
-            self.token = DBToken.from_list(res)
+            self.token = DBToken.from_row(res)
         else:
             self.db.rollback()
         self.db.disconnect()

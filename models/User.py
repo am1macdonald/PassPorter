@@ -4,6 +4,7 @@ from datetime import datetime
 import bcrypt
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 
+from controllers.AuthController import AuthController
 from controllers.DatabaseController import DatabaseController
 from models.BaseDBModel import DBModel
 
@@ -24,11 +25,12 @@ class DBUser(DBModel):
 
 
 class User:
-    def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None):
+    def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None, token=None):
         self.email = email
         self.username = self._create_username(email) if email else None
         self.password = self._hash_password(password.get_secret_value()) if password else None
         self.user_id = user_id
+        self.token = token
         self.db = DatabaseController()
         self.user: DBUser = self._fetch()
 
@@ -66,6 +68,9 @@ class User:
 
     def get_user(self):
         return self.user
+
+    def get_token(self):
+        return AuthController().issue_token({"user_id": self.user_id, "email": self.email, "username": self.username})
 
     def _fetch(self):
         self.db.connect()
@@ -127,7 +132,36 @@ class User:
                 users.user_id = %s
                     '''
             vals = (self.user_id,)
+        elif self.token:
+            user_token = AuthController().decode_token(self.token)
+            sql = f'''
+            select
+                users.user_id,
+                users.username,
+                users.email,
+                users.password_hash,
+                users.last_login,
+                (
+                select
+                    email_verification.verification_status
+                from
+                    email_verification
+                where
+                    email_verification.user_id = users.user_id) as verification_status,
+                (
+                select
+                    login_attempts.attempts
+                from
+                    login_attempts
+                where
+                    login_attempts.user_id = users.user_id) as attempts
+            from
+                users
+            where
+                users.email = %s
+                    '''
+            vals = (user_token.get("context").get("email"),)
 
-        user = DBUser.from_list(self.db.arbitrary(sql, vals)[0]) if sql != '' else None
-        self.db.disconnect()
+        res = self.db.arbitrary(sql, vals)
+        user = DBUser.from_row(res[0]) if len(res) > 0 else None
         return user

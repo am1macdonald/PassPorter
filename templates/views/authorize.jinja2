@@ -1,0 +1,11 @@
+<div class="flex flex-col gap-4 justify-center items-center mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <h2 class="text-2xl font-semibold">Authorize Application?</h2>
+    <p>{{ client_name }} would like to access the following:</p>
+    <ul>
+        {% for item in scope %}
+            <li></li>
+        {% endfor %}
+    </ul>
+    <a href="/allow-access{{ query_param_str }}"
+       class="appearance-none bg-blue border-none text-2xl px-3 py-1 rounded-md">authorize</a>
+</div>

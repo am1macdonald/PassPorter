@@ -3,10 +3,11 @@ from models.BaseDBModel import DBModel
 
 
 class DBClient(DBModel):
-    id: int
     client_id: str
     client_name: str
-    client_secret: str
+    client_secret_hash: str
+    hostname: str
+    redirect: str
 
 
 class Client:
@@ -33,12 +34,12 @@ class Client:
             from
                 clients
             join client_sites
-                 using("client_id");
+                 using("client_id")
             where
-                clients.client_id = %s
-                    '''
+                client_id = %s;'''
 
-        vals = (self.client_id, )
-        client = DBClient.from_list(self.db.arbitrary(sql, vals)[0]) if sql != '' else None
+        vals = (self.client_id,)
+        res = self.db.arbitrary(sql, vals)
+        client = DBClient.from_row(res[0]) if len(res) > 0 else None
         self.db.disconnect()
         return client

@@ -10,5 +10,5 @@ from controllers.DatabaseController import DatabaseController
 class DBModel(BaseModel):
 
     @classmethod
-    def from_list(cls, tpl):
+    def from_row(cls, tpl):
         return cls(**{k: v for k, v in zip(cls.__fields__.keys(), tpl)})

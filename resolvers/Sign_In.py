@@ -1,6 +1,7 @@
 import bcrypt
 from email_validator import validate_email, EmailNotValidError
 from fastapi import Request
+from fastapi.responses import RedirectResponse
 from pydantic import EmailStr
 from pydantic import SecretStr
 
@@ -11,6 +12,7 @@ class SigninResolver:
     def __init__(self, request: Request, templates):
         self.request = request
         self.templates = templates
+        self.client = None
 
     @staticmethod
     def _check_password(password, password_hash):
@@ -26,20 +28,29 @@ class SigninResolver:
                                                    context={"to_extend": 'empty.jinja2', "invalid_email": 1,
                                                             "error_message": str(e),
                                                             "email": email})
-
-        user: DBUser = User(email).get_user()
-        if not user:
+        user = User(email)
+        user_value: DBUser = user.get_user()
+        if not user_value:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
                                                    context={"to_extend": 'empty.jinja2', "invalid_email": 1,
                                                             "error_message": "A user with this email does not exist",
                                                             "email": email})
-        if not self._check_password(password, user.password_hash):
+
+        if not self._check_password(password, user_value.password_hash):
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
                                                    context={"to_extend": 'empty.jinja2', "invalid_password": 1,
                                                             "error_message": "Wrong password",
                                                             "email": email})
+
+        token = user.get_token()
+        client_id = self.request.query_params.get("client_id")
+        if client_id:
+            redirect_url = f"/consent?{self.request.query_params}"
+            response = RedirectResponse(url=redirect_url, status_code=303)
+            response.set_cookie(key="token", value=token)
+            return response
 
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
                                                context={"message": f"Welcome {user.username}!"})

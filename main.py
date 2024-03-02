@@ -1,6 +1,5 @@
 from typing import Annotated
 
-import bcrypt
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
@@ -9,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 from pydantic import SecretStr
 
 from resolvers.Authorize import Authorize
+from resolvers.Consent import ConsentResolver
+from resolvers.Redirect import RedirectResolver
 from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
@@ -29,7 +30,7 @@ async def root(request: Request):
 @app.get("/sign-up", response_class=HTMLResponse)
 async def signup_page(request: Request):
     return templates.TemplateResponse(request=request, name="forms/sign-up.jinja2",
-                                      context={"to_extend": 'index.jinja2'})
+                                      context={"to_extend": 'index.jinja2', "query_params": f"{request.query_params}"})
 
 
 @app.post("/sign-up", response_class=HTMLResponse)
@@ -39,13 +40,17 @@ async def signup_response(email: Annotated[str, Form()], password: Annotated[Sec
 
 
 @app.get("/sign-in", response_class=HTMLResponse)
-async def sign_page(request: Request):
+async def sign_in_page(request: Request):
+    swap = True
+    if request.query_params.get("client_id"):
+        swap = False
     return templates.TemplateResponse(request=request, name="forms/sign-in.jinja2",
-                                      context={"to_extend": "index.jinja2"})
+                                      context={"to_extend": "index.jinja2", "query_params": request.query_params,
+                                               "swap": swap})
 
 
 @app.post("/sign-in", response_class=HTMLResponse)
-async def sign_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()], request: Request):
+async def sign_in_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()], request: Request):
     return SigninResolver(request, templates).resolve(email, password)
 
 
@@ -71,11 +76,21 @@ async def reset_password(uuid: Annotated[SecretStr, Form()], password: Annotated
     return PasswordResetResolver(request, templates).resolve_reset_action(uuid, password, confirm)
 
 
+@app.get("/authorize")
+async def authorize(request: Request, client_id: str, redirect_uri: str, response_type: str, scope: str):
+    return Authorize(request, templates).resolve_get(client_id, redirect_uri, response_type, scope)
+
+
 @app.post("/authorize")
-async def authorize(client_id: str, redirect_uri: str, response_type: str, scope: str):
-    print(client_id)
-    return Authorize()
-# client_id=client_id: the application’s client ID (how the API identifies the application)
-# redirect_uri=CALLBACK_URL: where the service redirects the user-agent after an authorization code is granted
-# response_type=code: specifies that your application is requesting an authorization code grant
-# scope=read
+async def authorize(authorized: Annotated[str, Form()], request: Request):
+    return Authorize(request, templates).resolve_post(authorized)
+
+
+@app.get("/consent")
+async def allow_access(request: Request):
+    return ConsentResolver(request, templates).resolve_get()
+
+
+@app.get("/redirect")
+async def allow_access(request: Request):
+    return RedirectResolver(request).resolve()

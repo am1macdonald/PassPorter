@@ -5,7 +5,6 @@ import psycopg2
 
 class DatabaseController:
     def __init__(self):
-        print("new DB Controller")
         self.connection = None
         self.cursor = None
 
