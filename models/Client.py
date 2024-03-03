@@ -13,8 +13,7 @@ class DBClient(DBModel):
 class Client:
     def __init__(self, client_id: str):
         self.db = DatabaseController()
-        self.client_id = client_id
-        self._client = self._fetch()
+        self._client = self._fetch(client_id) if client_id else None
 
     def add(self):
         print("adding client")
@@ -22,7 +21,7 @@ class Client:
     def get(self):
         return self._client
 
-    def _fetch(self):
+    def _fetch(self, client_id):
         self.db.connect()
         sql = f'''
             select
@@ -38,7 +37,7 @@ class Client:
             where
                 client_id = %s;'''
 
-        vals = (self.client_id,)
+        vals = (client_id,)
         res = self.db.arbitrary(sql, vals)
         client = DBClient.from_row(res[0]) if len(res) > 0 else None
         self.db.disconnect()

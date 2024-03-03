@@ -2,13 +2,16 @@ from typing import Annotated
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request, Form
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pydantic import SecretStr
+from pydantic import SecretStr, BaseModel
 
+from models.Token import TokenRequest
 from resolvers.Authorize import Authorize
 from resolvers.Consent import ConsentResolver
+from resolvers.GetToken import GetTokenResolver
 from resolvers.Redirect import RedirectResolver
 from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
@@ -20,6 +23,14 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -100,3 +111,8 @@ async def allow_access(request: Request):
 @app.get("/redirect")
 async def allow_access(request: Request):
     return RedirectResolver(request).resolve()
+
+
+@app.post("/get-token")
+async def get_token(request: Request, item: TokenRequest):
+    return GetTokenResolver(request, templates).resolve(item)

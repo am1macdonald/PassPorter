@@ -70,7 +70,8 @@ class User:
         return self.user
 
     def get_token(self):
-        return AuthController().issue_token({"user_id": self.user_id, "email": self.email, "username": self.username})
+        return AuthController().issue_token(
+            {"user_id": self.user.user_id, "email": self.user.email, "username": self.user.username})
 
     def _fetch(self):
         self.db.connect()
