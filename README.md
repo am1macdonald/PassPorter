@@ -43,19 +43,17 @@ To use Pass Porter, it might be best to run on a server behind a reverse proxy.
 
 I haven't done this yet, but I plan to use Nginx as a reverse proxy for this project.
 
-## Roadmap
+## Roadmap / Wishlist
 
 - [x] Create a basic authentication system
 - [x] Add a database to store user information
 - [x] Add a way to reset passwords
-- [ ] Add a way to verify email addresses
-- [ ] Add an RPC system to deliver confirmation emails
-- [ ] Add OAuth2 support
-- [ ] Add a way to manage user roles
-- [ ] Add a way to manage user permissions
-- [ ] Add a way to manage user sessions using JWT
+- [x] Add a way to verify email addresses
+- [ ] Build emailer to deliver verification links
+- [x] Add a way to manage user sessions using JWT
 - [x] Add authorization endpoint
 - [ ] Add a get token endpoint
+- [ ] Transition from HS256 to RS256 for JWT encoding
 
 ## Contributing
 
