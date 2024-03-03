@@ -17,8 +17,8 @@ class Authorize:
         self.user_token = self.request.cookies.get("token")
 
     def resolve_get(self, *args):
-        client_err = self._check_client().get('error')
-        if client_err:
+        client_err = self._check_client()
+        if client_err and client_err.get('error'):
             return client_err
 
         if not self.user_token:
@@ -49,7 +49,8 @@ class Authorize:
                                            self.request.query_params.get("scope"))
         redirect = self.request.query_params.get("redirect_uri")
         if auth_code and redirect:
-            response = RedirectResponse(url=f"/redirect?authorization={auth_code}&redirect_uri={self.redirect}", status_code=303)
+            response = RedirectResponse(url=f"/redirect?authorization={auth_code}&redirect_uri={self.redirect}",
+                                        status_code=303)
             return response
 
     def _check_client(self):

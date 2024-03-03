@@ -44,9 +44,15 @@ async def sign_in_page(request: Request):
     swap = True
     if request.query_params.get("client_id"):
         swap = False
-    return templates.TemplateResponse(request=request, name="forms/sign-in.jinja2",
-                                      context={"to_extend": "index.jinja2", "query_params": request.query_params,
-                                               "swap": swap})
+    response = templates.TemplateResponse(request=request, name="forms/sign-in.jinja2",
+                                          context={"to_extend": "index.jinja2", "query_params": request.query_params,
+                                                   "swap": swap})
+    response.headers.update({
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+    })
+    return response
 
 
 @app.post("/sign-in", response_class=HTMLResponse)

@@ -13,5 +13,5 @@ class RedirectResolver:
         self.auth_code = request.query_params.get("authorization")
 
     def resolve(self):
-        return RedirectResponse(f"http://{self.redirect}?authorization={self.auth_code}", status_code=303)
+        return RedirectResponse(f"{self.redirect}?authorization={self.auth_code}", status_code=303)
 
