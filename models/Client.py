@@ -1,3 +1,5 @@
+import bcrypt
+
 from controllers.DatabaseController import DatabaseController
 from models.BaseDBModel import DBModel
 
@@ -20,6 +22,9 @@ class Client:
 
     def get(self):
         return self._client
+
+    def validate(self, secret: str):
+        return bcrypt.checkpw(secret.encode(), self._client.client_secret_hash.encode())
 
     def _fetch(self, client_id):
         self.db.connect()
