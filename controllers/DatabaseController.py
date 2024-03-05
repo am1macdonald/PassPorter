@@ -1,12 +1,14 @@
 import os
 
 import psycopg2
+from psycopg2.pool import ThreadedConnectionPool
 
 
 class DatabaseController:
     def __init__(self):
         self.connection = None
         self.cursor = None
+        self.pool: ThreadedConnectionPool = None
 
     def connect(self):
         self.connection = psycopg2.connect(dbname=os.environ["PG_DATABASE"],
@@ -53,3 +55,22 @@ class DatabaseController:
     def disconnect(self):
         self.cursor.close()
         self.connection.close()
+
+    def create_pool(self):
+        try:
+            self.pool = ThreadedConnectionPool(0, 100,
+                                               database=os.environ["PG_DATABASE"],
+                                               user=os.environ["PG_USER"],
+                                               password=os.environ["PG_PASSWORD"],
+                                               host=os.environ["PG_HOST"],
+                                               port=os.environ["PG_PORT"]
+                                               )
+        except psycopg2.DatabaseError as error:
+            print(error)
+
+
+    def get_connection(self):
+        return self.pool.getconn()
+
+    def return_connection(self, connection):
+        self.pool.putconn(connection)

@@ -1,13 +1,13 @@
 from typing import Annotated
 
-from dotenv import load_dotenv
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pydantic import SecretStr, BaseModel
+from pydantic import SecretStr
 
+from sessions.database import db
 from models.Token import TokenRequest
 from resolvers.Authorize import Authorize
 from resolvers.Consent import ConsentResolver
@@ -17,7 +17,6 @@ from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
 
-load_dotenv()
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -31,6 +30,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+def get_connection():
+    connection = db.get_connection()
+    try:
+        yield connection
+    finally:
+        db.return_connection(connection)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -67,8 +74,9 @@ async def sign_in_page(request: Request):
 
 
 @app.post("/sign-in", response_class=HTMLResponse)
-async def sign_in_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()], request: Request):
-    return SigninResolver(request, templates).resolve(email, password)
+async def sign_in_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()], request: Request,
+                           conn=Depends(get_connection)):
+    return SigninResolver(request, templates, conn).resolve(email, password)
 
 
 @app.get("/forgot-password", response_class=HTMLResponse)

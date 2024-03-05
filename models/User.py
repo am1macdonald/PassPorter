@@ -5,7 +5,6 @@ import bcrypt
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 from controllers.AuthController import AuthController
-from controllers.DatabaseController import DatabaseController
 from models.BaseDBModel import DBModel
 
 
@@ -25,13 +24,14 @@ class DBUser(DBModel):
 
 
 class User:
-    def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None, token=None):
+    def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None,
+                 token=None, conn=None, ):
         self.email = email
         self.username = self._create_username(email) if email else None
         self.password = self._hash_password(password.get_secret_value()) if password else None
         self.user_id = user_id
         self.token = token
-        self.db = DatabaseController()
+        self.conn = conn
         self.user: DBUser = self._fetch()
 
     @staticmethod
@@ -43,14 +43,22 @@ class User:
         return email.split('@')[0] + str(uuid.uuid4())
 
     def add(self):
-        self.db.connect()
-        user = self.db.insert('users', ['username', 'password_hash', 'email'],
-                              (self.username, self.password, self.email))
-        self.db.insert('email_verification', ['user_id'], (user[0],))
-        self.db.disconnect()
+        cur = self.conn.cursor()
+        sql = '''
+        INSERT INTO public.users
+        (username, password_hash, email)
+        VALUES(%s,%s,%s)
+        RETURNING *;
+        '''
+        vals = (self.username, self.password, self.email)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            cur.commit()
+            self.user = DBUser.from_row(res)
 
     def update_password(self, password: SecretStr):
-        self.db.connect()
+        cur = self.conn.cursor()
         sql = '''
         UPDATE public.users
         SET password_hash=%s
@@ -58,12 +66,13 @@ class User:
         RETURNING password_hash; 
         '''
         vals = (self._hash_password(password.get_secret_value()), self.user.user_id,)
-        res = self.db.arbitrary(sql, vals)
-        if bcrypt.checkpw(password.get_secret_value().encode(), res[0][0].encode()):
-            self.db.commit()
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if bcrypt.checkpw(password.get_secret_value().encode(), res[0].encode()):
+            cur.commit()
             return True
         else:
-            self.db.rollback()
+            cur.rollback()
             return False
 
     def get_user(self):
@@ -74,7 +83,7 @@ class User:
             {"user_id": self.user.user_id, "email": self.user.email, "username": self.user.username})
 
     def _fetch(self):
-        self.db.connect()
+        cur = self.conn.cursor()
         sql = ''
         vals = None
         if self.email:
@@ -163,6 +172,7 @@ class User:
                     '''
             vals = (user_token.get("context").get("email"),)
 
-        res = self.db.arbitrary(sql, vals)
-        user = DBUser.from_row(res[0]) if len(res) > 0 else None
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        user = DBUser.from_row(res) if res else None
         return user

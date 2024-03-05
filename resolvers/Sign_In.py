@@ -5,13 +5,15 @@ from fastapi.responses import RedirectResponse
 from pydantic import EmailStr
 from pydantic import SecretStr
 
+from controllers.DatabaseController import DatabaseController
 from models.User import User, DBUser
 
 
 class SigninResolver:
-    def __init__(self, request: Request, templates):
+    def __init__(self, request: Request, templates, conn):
         self.request = request
         self.templates = templates
+        self.conn = conn
         self.client = None
 
     @staticmethod
@@ -28,7 +30,7 @@ class SigninResolver:
                                                    context={"to_extend": 'empty.jinja2', "invalid_email": 1,
                                                             "error_message": str(e),
                                                             "email": email})
-        user = User(email)
+        user = User(conn=self.conn, email=email)
         user_value: DBUser = user.get_user()
         if not user_value:
             return self.templates.TemplateResponse(request=self.request,
