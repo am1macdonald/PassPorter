@@ -39,7 +39,7 @@ class Authorization:
         cur.execute(sql, vals)
         res = cur.fetchone()
         if res:
-            cur.commit()
+            self._conn.commit()
             return res[0] if res else None
 
     def mark_used(self):
@@ -54,11 +54,11 @@ class Authorization:
         cur.execute(sql,vals)
         res = cur.fetchone()
         if res:
-            cur.commit()
+            self._conn.commit()
             return res[0] if res else None
 
     def _fetch(self, code):
-        cur = self._conn.cursor
+        cur = self._conn.cursor()
         sql = f'''
         SELECT 
             *

@@ -54,7 +54,7 @@ class User:
         cur.execute(sql, vals)
         res = cur.fetchone()
         if res:
-            cur.commit()
+            self._conn.commit()
             self.user = DBUser.from_row(res)
 
     def update_password(self, password: SecretStr):
@@ -69,10 +69,10 @@ class User:
         cur.execute(sql, vals)
         res = cur.fetchone()
         if bcrypt.checkpw(password.get_secret_value().encode(), res[0].encode()):
-            cur.commit()
+            self._conn.commit()
             return True
         else:
-            cur.rollback()
+            self._conn.rollback()
             return False
 
     def get_user(self):

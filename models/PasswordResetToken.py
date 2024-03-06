@@ -43,9 +43,9 @@ class PasswordResetToken:
         vals = (self.token.id,)
         cur.execute(sql, vals)
         if cur.fetchone():
-            cur.commit()
+            self._conn.commit()
         else:
-            cur.rollback()
+            self._conn.rollback()
 
     def add(self) -> bool:
         cur = self._conn.cursor()
@@ -56,8 +56,8 @@ class PasswordResetToken:
         cur.execute(sql, vals)
         res = cur.fetchone()
         if res:
-            cur.commit()
+            self._conn.commit()
             self.token = DBToken.from_row(res)
         else:
-            cur.rollback()
+            self._conn.rollback()
         return res
