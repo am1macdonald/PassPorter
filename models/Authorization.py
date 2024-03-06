@@ -1,7 +1,6 @@
 import secrets
 from datetime import datetime
 
-from controllers.DatabaseController import DatabaseController
 from models.BaseDBModel import DBModel
 from models.Client import Client
 from models.User import User
@@ -18,14 +17,15 @@ class DBAuth(DBModel):
 
 
 class Authorization:
-    def __init__(self, authorization: str = None):
-        self.db = DatabaseController()
+    def __init__(self, authorization: str = None, conn=None):
+        self._conn = conn
         self._auth: DBAuth = self._fetch(authorization) if authorization else None
 
     def get(self):
         return self._auth
 
     def add_authorization(self, user: User, client: Client, redirect: str, scope: str):
+        cur = self._conn.cursor()
         auth_user = user.get_user()
         code = secrets.token_urlsafe(64)
         sql = '''
@@ -36,13 +36,14 @@ class Authorization:
         RETURNING code;
         '''
         vals = (code, client.get().client_id, auth_user.user_id, redirect, scope)
-        self.db.connect()
-        res = self.db.arbitrary(sql, vals)
-        self.db.commit()
-        self.db.disconnect()
-        return res[0][0] if len(res) > 0 else None
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            cur.commit()
+            return res[0] if res else None
 
     def mark_used(self):
+        cur = self._conn.cursor()
         sql = '''
         UPDATE public.authorization_codes
             set "used" = true
@@ -50,14 +51,14 @@ class Authorization:
         RETURNING code;
         '''
         vals = (self._auth.code,)
-        self.db.connect()
-        res = self.db.arbitrary(sql, vals)
-        self.db.commit()
-        self.db.disconnect()
-        return res[0][0] if len(res) > 0 else None
+        cur.execute(sql,vals)
+        res = cur.fetchone()
+        if res:
+            cur.commit()
+            return res[0] if res else None
 
     def _fetch(self, code):
-        self.db.connect()
+        cur = self._conn.cursor
         sql = f'''
         SELECT 
             *
@@ -67,7 +68,6 @@ class Authorization:
             code = %s;
                 '''
         vals = (code,)
-        res = self.db.arbitrary(sql, vals)
-        client = DBAuth.from_row(res[0]) if len(res) > 0 else None
-        self.db.disconnect()
-        return client
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        return DBAuth.from_row(res) if res else None
