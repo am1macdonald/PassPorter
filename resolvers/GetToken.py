@@ -15,7 +15,7 @@ class GetTokenResolver:
         self._conn = conn
 
     def resolve(self, token_request: TokenRequest):
-        auth = Authorization(token_request.authorization)
+        auth = Authorization(token_request.authorization, conn=self._conn)
         db_auth = auth.get()
         if db_auth is None or db_auth.used or db_auth.expiration.date() < date.today():
             return {"error": "invalid authorization code"}

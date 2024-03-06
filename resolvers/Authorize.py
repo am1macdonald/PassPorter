@@ -45,7 +45,7 @@ class Authorize:
         if user.get_user() is None:
             raise ValueError("User does not exist")
 
-        auth = Authorization()
+        auth = Authorization(conn=self._conn)
         auth_code = auth.add_authorization(user, self.client, self.request.query_params.get("redirect_uri"),
                                            self.request.query_params.get("scope"))
         redirect = self.request.query_params.get("redirect_uri")
