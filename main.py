@@ -117,8 +117,8 @@ async def allow_access(request: Request, conn=Depends(get_connection)):
 
 
 @app.get("/redirect")
-async def allow_access(request: Request, conn=Depends(get_connection)):
-    return RedirectResolver(request, conn).resolve()
+async def allow_access(request: Request):
+    return RedirectResolver(request).resolve()
 
 
 @app.post("/get-token")

@@ -7,9 +7,10 @@ from models.User import User
 
 
 class Authorize:
-    def __init__(self, request: Request, templates):
+    def __init__(self, request: Request, templates, conn):
         self.request = request
         self.templates = templates
+        self._conn = conn
         self.client_id = request.query_params.get("client_id")
         self.redirect = request.query_params.get("redirect_uri")
         self.client = Client(self.client_id) if self.client_id else None
@@ -40,7 +41,7 @@ class Authorize:
             response = RedirectResponse(url=url_string, status_code=303)
             return response
 
-        user = User(token=self.user_token)
+        user = User(token=self.user_token, conn=self._conn)
         if user.get_user() is None:
             raise ValueError("User does not exist")
 

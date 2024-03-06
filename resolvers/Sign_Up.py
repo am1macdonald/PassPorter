@@ -8,9 +8,10 @@ from models.User import User
 
 
 class SignupResolver:
-    def __init__(self, request: Request, templates):
+    def __init__(self, request: Request, templates, conn = None):
         self.request = request
         self.templates = templates
+        self._conn = conn
 
     def resolve(self, email: EmailStr, password: SecretStr, confirm: SecretStr):
         try:

@@ -8,9 +8,10 @@ from models.User import DBUser, User
 
 
 class PasswordResetResolver:
-    def __init__(self, request: Request, templates):
+    def __init__(self, request: Request, templates, conn = None):
         self.request = request
         self.templates = templates
+        self._conn = conn
 
     def resolve_request(self, email: EmailStr):
         try:
@@ -23,7 +24,7 @@ class PasswordResetResolver:
                                                             "error_message": str(e),
                                                             "email": email})
 
-        user: DBUser = User(email).get_user()
+        user: DBUser = User(email, conn=self._conn).get_user()
         if not user:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/forgot-password.jinja2',
@@ -81,7 +82,7 @@ class PasswordResetResolver:
                 context={"to_extend": 'empty.jinja2', "error": 1,
                          "error_message": message,
                          "invalid_password": 1, "uuid": token_str.get_secret_value()})
-        user = User(user_id=token.token.user_id)
+        user = User(user_id=token.token.user_id, conn=self._conn)
         if not user.get_user():
             raise ValueError('user does not exist')
         if not user.update_password(password):

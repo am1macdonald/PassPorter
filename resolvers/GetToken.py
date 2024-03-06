@@ -9,9 +9,10 @@ from models.User import User
 
 
 class GetTokenResolver:
-    def __init__(self, request: Request, templates):
+    def __init__(self, request: Request, templates, conn = None):
         self.request = request
         self.templates = templates
+        self._conn = conn
 
     def resolve(self, token_request: TokenRequest):
         auth = Authorization(token_request.authorization)
@@ -23,7 +24,7 @@ class GetTokenResolver:
             return {"error": "invalid client id"}
         if not client.validate(token_request.client_secret):
             return {"error": "invalid client secret"}
-        user = User(user_id=db_auth.user_id)
+        user = User(user_id=db_auth.user_id, conn=self._conn)
         token = user.get_token()
         if auth.mark_used() is None:
             raise ValueError("can\'t use token")

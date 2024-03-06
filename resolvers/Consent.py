@@ -5,9 +5,10 @@ from models.Client import Client
 
 
 class ConsentResolver:
-    def __init__(self, request: Request, templates):
+    def __init__(self, request: Request, templates, conn=None):
         self.request = request
         self.templates = templates
+        self._conn = conn
         self.query = request.query_params
 
     def resolve_get(self):

@@ -25,13 +25,13 @@ class DBUser(DBModel):
 
 class User:
     def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None,
-                 token=None, conn=None, ):
+                 token=None, conn=None):
         self.email = email
         self.username = self._create_username(email) if email else None
         self.password = self._hash_password(password.get_secret_value()) if password else None
         self.user_id = user_id
         self.token = token
-        self.conn = conn
+        self._conn = conn
         self.user: DBUser = self._fetch()
 
     @staticmethod
@@ -43,7 +43,7 @@ class User:
         return email.split('@')[0] + str(uuid.uuid4())
 
     def add(self):
-        cur = self.conn.cursor()
+        cur = self._conn.cursor()
         sql = '''
         INSERT INTO public.users
         (username, password_hash, email)
@@ -58,7 +58,7 @@ class User:
             self.user = DBUser.from_row(res)
 
     def update_password(self, password: SecretStr):
-        cur = self.conn.cursor()
+        cur = self._conn.cursor()
         sql = '''
         UPDATE public.users
         SET password_hash=%s
@@ -83,7 +83,7 @@ class User:
             {"user_id": self.user.user_id, "email": self.user.email, "username": self.user.username})
 
     def _fetch(self):
-        cur = self.conn.cursor()
+        cur = self._conn.cursor()
         sql = ''
         vals = None
         if self.email:
