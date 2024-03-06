@@ -2,7 +2,6 @@ from datetime import datetime
 
 from pydantic import SecretStr
 
-from controllers.DatabaseController import DatabaseController
 from models.BaseDBModel import DBModel
 from models.User import DBUser
 
@@ -16,48 +15,49 @@ class DBToken(DBModel):
 
 
 class PasswordResetToken:
-    def __init__(self, user: DBUser | None = None, token_str: SecretStr | None = None):
-        self.db = DatabaseController()
+    def __init__(self, user: DBUser | None = None, token_str: SecretStr | None = None, conn=None):
+        self._conn = conn
         self.user = user
         self.token_str = token_str
         self.token = self._fetch_token()
 
     def _fetch_token(self) -> DBToken:
-        self.db.connect()
-        query = ''
-        params = ()
+        cur = self._conn.cursor()
+        sql = ''
+        vals = ()
         if self.user:
-            query = 'select * from "password_reset" where "user_id"=%s and "is_valid"=true order by id desc limit 1;'
-            params = (self.user.user_id,)
+            sql = 'select * from "password_reset" where "user_id"=%s and "is_valid"=true order by id desc limit 1;'
+            vals = (self.user.user_id,)
         elif self.token_str:
-            query = 'select * from "password_reset" where "reset_token"=%s and "is_valid"=true order by id desc limit 1;'
-            params = (self.token_str.get_secret_value(),)
-        res = self.db.arbitrary(query, params) if query else None
-        self.db.disconnect()
-        return DBToken.from_row(res[0]) if res and len(res) > 0 else None
+            sql = 'select * from "password_reset" where "reset_token"=%s and "is_valid"=true order by id desc limit 1;'
+            vals = (self.token_str.get_secret_value(),)
+        cur.execute(sql, vals)
+        return cur.fetchone()
 
     def exists(self) -> bool:
         return self.token is not None and self.token.is_valid
 
     def invalidate(self):
-        self.db.connect()
-        res = self.db.arbitrary("UPDATE public.password_reset SET is_valid=false WHERE id = %s RETURNING *;",
-                                (self.token.id,))
-        if len(res) > 0:
-            self.db.commit()
+        cur = self._conn.cursor()
+        sql = "UPDATE public.password_reset SET is_valid=false WHERE id = %s RETURNING *;"
+        vals = (self.token.id,)
+        cur.execute(sql, vals)
+        if cur.fetchone():
+            cur.commit()
         else:
-            self.db.rollback()
-        self.db.disconnect()
+            cur.rollback()
 
     def add(self) -> bool:
-        self.db.connect()
-        res = self.db.arbitrary(
-            'INSERT INTO public.password_reset (user_id) SELECT users.user_id FROM users WHERE users.email = %s RETURNING *;',
-            (self.user.email,))[0]
+        cur = self._conn.cursor()
+        sql = '''
+        INSERT INTO public.password_reset (user_id) SELECT users.user_id FROM users WHERE users.email = %s RETURNING *;
+        '''
+        vals = (self.user.email,)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
         if res:
-            self.db.commit()
+            cur.commit()
             self.token = DBToken.from_row(res)
         else:
-            self.db.rollback()
-        self.db.disconnect()
+            cur.rollback()
         return res
