@@ -53,8 +53,8 @@ async def signup_page(request: Request):
 
 @app.post("/sign-up", response_class=HTMLResponse)
 async def signup_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()],
-                          confirm: Annotated[SecretStr, Form()], request: Request):
-    return SignupResolver(request, templates).resolve(email, password, confirm)
+                          confirm: Annotated[SecretStr, Form()], request: Request, conn=Depends(get_connection)):
+    return SignupResolver(request, templates, conn).resolve(email, password, confirm)
 
 
 @app.get("/sign-in", response_class=HTMLResponse)
@@ -86,41 +86,41 @@ async def forgot_password_page(request: Request):
 
 
 @app.post("/forgot-password", response_class=HTMLResponse)
-async def forgot_password_response(email: Annotated[str, Form()], request: Request):
-    return PasswordResetResolver(request, templates).resolve_request(email)
+async def forgot_password_response(email: Annotated[str, Form()], request: Request, conn=Depends(get_connection)):
+    return PasswordResetResolver(request, templates, conn).resolve_request(email)
 
 
 @app.get("/reset-password/{token_id}", response_class=HTMLResponse)
-async def reset_password(request: Request, token_id: SecretStr):
-    return PasswordResetResolver(request, templates).resolve_get_reset(token_id)
+async def reset_password(request: Request, token_id: SecretStr, conn=Depends(get_connection)):
+    return PasswordResetResolver(request, templates, conn).resolve_get_reset(token_id)
 
 
 @app.post("/reset-password", response_class=HTMLResponse)
 async def reset_password(uuid: Annotated[SecretStr, Form()], password: Annotated[SecretStr, Form()],
-                         confirm: Annotated[SecretStr, Form()], request: Request):
-    return PasswordResetResolver(request, templates).resolve_reset_action(uuid, password, confirm)
+                         confirm: Annotated[SecretStr, Form()], request: Request, conn=Depends(get_connection)):
+    return PasswordResetResolver(request, templates, conn).resolve_reset_action(uuid, password, confirm)
 
 
 @app.get("/authorize")
-async def authorize(request: Request, client_id: str, redirect_uri: str, response_type: str, scope: str):
-    return Authorize(request, templates).resolve_get(client_id, redirect_uri, response_type, scope)
+async def authorize(request: Request, client_id: str, redirect_uri: str, response_type: str, scope: str, conn=Depends(get_connection)):
+    return Authorize(request, templates, conn).resolve_get(client_id, redirect_uri, response_type, scope)
 
 
 @app.post("/authorize")
-async def authorize(authorized: Annotated[str, Form()], request: Request):
-    return Authorize(request, templates).resolve_post(authorized)
+async def authorize(authorized: Annotated[str, Form()], request: Request, conn=Depends(get_connection)):
+    return Authorize(request, templates, conn).resolve_post(authorized)
 
 
 @app.get("/consent")
-async def allow_access(request: Request):
-    return ConsentResolver(request, templates).resolve_get()
+async def allow_access(request: Request, conn=Depends(get_connection)):
+    return ConsentResolver(request, templates, conn).resolve_get()
 
 
 @app.get("/redirect")
-async def allow_access(request: Request):
-    return RedirectResolver(request).resolve()
+async def allow_access(request: Request, conn=Depends(get_connection)):
+    return RedirectResolver(request, conn).resolve()
 
 
 @app.post("/get-token")
-async def get_token(request: Request, item: TokenRequest):
-    return GetTokenResolver(request, templates).resolve(item)
+async def get_token(request: Request, item: TokenRequest, conn=Depends(get_connection)):
+    return GetTokenResolver(request, templates, conn).resolve(item)
