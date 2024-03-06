@@ -1,6 +1,5 @@
 import bcrypt
 
-from controllers.DatabaseController import DatabaseController
 from models.BaseDBModel import DBModel
 
 
@@ -13,8 +12,8 @@ class DBClient(DBModel):
 
 
 class Client:
-    def __init__(self, client_id: str):
-        self.db = DatabaseController()
+    def __init__(self, client_id: str, conn=None):
+        self._conn = conn
         self._client = self._fetch(client_id) if client_id else None
 
     def add(self):
@@ -27,7 +26,7 @@ class Client:
         return bcrypt.checkpw(secret.encode(), self._client.client_secret_hash.encode())
 
     def _fetch(self, client_id):
-        self.db.connect()
+        cur = self._conn.cursor()
         sql = f'''
             select
                 client_id,
@@ -43,7 +42,6 @@ class Client:
                 client_id = %s;'''
 
         vals = (client_id,)
-        res = self.db.arbitrary(sql, vals)
-        client = DBClient.from_row(res[0]) if len(res) > 0 else None
-        self.db.disconnect()
-        return client
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        return DBClient.from_row(res) if res else None

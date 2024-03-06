@@ -12,7 +12,7 @@ class ConsentResolver:
         self.query = request.query_params
 
     def resolve_get(self):
-        client = Client(self.request.query_params.get("client_id")).get()
+        client = Client(self.request.query_params.get("client_id"), conn=self._conn).get()
         if not client:
             return {'error': True, 'message': 'client does not exist'}
         if self.query.get("redirect_uri") not in client.redirect:

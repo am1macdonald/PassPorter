@@ -13,7 +13,7 @@ class Authorize:
         self._conn = conn
         self.client_id = request.query_params.get("client_id")
         self.redirect = request.query_params.get("redirect_uri")
-        self.client = Client(self.client_id) if self.client_id else None
+        self.client = Client(self.client_id, conn=conn) if self.client_id else None
         self.db_client = self.client.get() if self.client else None
         self.user_token = self.request.cookies.get("token")
 

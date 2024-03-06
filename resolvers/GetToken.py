@@ -19,7 +19,7 @@ class GetTokenResolver:
         db_auth = auth.get()
         if db_auth is None or db_auth.used or db_auth.expiration.date() < date.today():
             return {"error": "invalid authorization code"}
-        client = Client(client_id=token_request.client_id)
+        client = Client(client_id=token_request.client_id, conn=self._conn)
         if not client.get():
             return {"error": "invalid client id"}
         if not client.validate(token_request.client_secret):
