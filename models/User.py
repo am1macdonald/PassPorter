@@ -24,11 +24,11 @@ class DBUser(DBModel):
 
 
 class User:
-    def __init__(self, email: str = None, password: SecretStr = None, user_id: int = None,
+    def __init__(self, username: str = None, email: str = None, password: SecretStr = None, user_id: int = None,
                  token=None, conn=None):
         self.email = email
-        self.username = self._create_username(email) if email else None
-        self.password = self._hash_password(password.get_secret_value()) if password else None
+        self.username = username
+        self.password = password
         self.user_id = user_id
         self.token = token
         self._conn = conn
@@ -42,7 +42,9 @@ class User:
     def _create_username(email):
         return email.split('@')[0] + str(uuid.uuid4())
 
-    def add(self):
+    def add(self, email, password):
+        username = self._create_username(email) if email else None
+        pw_hash = self._hash_password(password)
         cur = self._conn.cursor()
         sql = '''
         INSERT INTO public.users
@@ -50,7 +52,7 @@ class User:
         VALUES(%s,%s,%s)
         RETURNING *;
         '''
-        vals = (self.username, self.password, self.email)
+        vals = (username, pw_hash, email)
         cur.execute(sql, vals)
         res = cur.fetchone()
         if res:
@@ -75,12 +77,18 @@ class User:
             self._conn.rollback()
             return False
 
+    def exists(self):
+        return self.user is not None
+
     def get_user(self):
         return self.user
 
     def get_token(self):
         return AuthController().issue_token(
             {"user_id": self.user.user_id, "email": self.user.email, "username": self.user.username})
+
+    def get_id(self):
+        return self.user.user_id
 
     def _fetch(self):
         cur = self._conn.cursor()
