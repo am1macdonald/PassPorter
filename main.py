@@ -7,7 +7,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pydantic import SecretStr
 
-from sessions.database import db
 from models.Token import TokenRequest
 from resolvers.Authorize import Authorize
 from resolvers.Consent import ConsentResolver
@@ -16,6 +15,8 @@ from resolvers.Redirect import RedirectResolver
 from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
+from sessions.database import db
+from sessions.mail import mail
 
 app = FastAPI()
 
@@ -38,6 +39,10 @@ def get_connection():
         yield connection
     finally:
         db.return_connection(connection)
+
+
+def get_mailer():
+    yield mail
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -102,7 +107,8 @@ async def reset_password(uuid: Annotated[SecretStr, Form()], password: Annotated
 
 
 @app.get("/authorize")
-async def authorize(request: Request, client_id: str, redirect_uri: str, response_type: str, scope: str, conn=Depends(get_connection)):
+async def authorize(request: Request, client_id: str, redirect_uri: str, response_type: str, scope: str,
+                    conn=Depends(get_connection)):
     return Authorize(request, templates, conn).resolve_get(client_id, redirect_uri, response_type, scope)
 
 
