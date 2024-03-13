@@ -16,7 +16,7 @@ from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
 from sessions.database import db
-from sessions.mail import mail
+from sessions.mail import mailer
 
 app = FastAPI()
 
@@ -42,7 +42,7 @@ def get_connection():
 
 
 def get_mailer():
-    yield mail
+    yield mailer
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -58,8 +58,9 @@ async def signup_page(request: Request):
 
 @app.post("/sign-up", response_class=HTMLResponse)
 async def signup_response(email: Annotated[str, Form()], password: Annotated[SecretStr, Form()],
-                          confirm: Annotated[SecretStr, Form()], request: Request, conn=Depends(get_connection)):
-    return SignupResolver(request, templates, conn).resolve(email, password, confirm)
+                          confirm: Annotated[SecretStr, Form()], request: Request, conn=Depends(get_connection),
+                          mail=Depends(get_mailer)):
+    return SignupResolver(request, templates, conn, mail).resolve(email, password, confirm)
 
 
 @app.get("/sign-in", response_class=HTMLResponse)

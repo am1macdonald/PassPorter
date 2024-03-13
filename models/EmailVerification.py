@@ -10,15 +10,16 @@ class DBEmailVerification(DBModel):
     confirmation_token: str
     expiration_date: datetime
     verification_status: bool
-    confirmation_date: datetime
+    confirmation_date: datetime | None = None
     attempts: int
 
 
 class EmailVerification:
-    def __init__(self, token=None, conn=None):
+    def __init__(self, user_id=None, token=None, conn=None):
         self._token = token
+        self._user_id = user_id
         self._conn = conn
-        self._underlying: DBEmailVerification = self._fetch()
+        self._underlying: DBEmailVerification = self._fetch() if token or user_id else None
 
     def add(self, user_id: int):
         if self._underlying is not None:
@@ -47,11 +48,21 @@ class EmailVerification:
 
     def _fetch(self):
         cur = self._conn.cursor()
-        sql = '''
-        SELECT * FROM public.email_verification
-        WHERE "confirmation_token" = %s;
-        '''
-        vals = (self._token,)
-        cur.execute(sql, vals)
-        res = cur.fetchone()
-        return DBEmailVerification.from_row(res) if res else None
+        sql = ''
+        vals = ()
+        if self._token:
+            sql = '''
+            SELECT * FROM public.email_verification
+            WHERE "confirmation_token" = %s;
+            '''
+            vals = (self._token,)
+        elif self._user_id:
+            sql = '''
+            SELECT * FROM public.email_verification
+            WHERE "user_id" = %s;
+            '''
+            vals = (self._user_id,)
+        if sql != '' and len(vals) == 1:
+            cur.execute(sql, vals)
+            res = cur.fetchone()
+            return DBEmailVerification.from_row(res) if res else None

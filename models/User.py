@@ -19,8 +19,8 @@ class DBUser(DBModel):
     email: EmailStr
     password_hash: SecretStr
     last_login: datetime | None = None
-    verification_status: bool
-    attempts: int
+    verification_status: bool | None = None
+    attempts: int | None = None
 
 
 class User:
@@ -35,8 +35,8 @@ class User:
         self.user: DBUser = self._fetch()
 
     @staticmethod
-    def _hash_password(password):
-        return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    def _hash_password(password: SecretStr):
+        return bcrypt.hashpw(password.get_secret_value().encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     @staticmethod
     def _create_username(email):
@@ -57,7 +57,7 @@ class User:
         res = cur.fetchone()
         if res:
             self._conn.commit()
-            self.user = DBUser.from_row(res)
+            return res
 
     def update_password(self, password: SecretStr):
         cur = self._conn.cursor()
