@@ -47,10 +47,16 @@ class User:
         pw_hash = self._hash_password(password)
         cur = self._conn.cursor()
         sql = '''
-        INSERT INTO public.users
-        (username, password_hash, email)
-        VALUES(%s,%s,%s)
-        RETURNING *;
+        WITH rows AS (
+            INSERT INTO public.users
+            (username, password_hash, email)
+            VALUES(%s,%s,%s)
+            RETURNING *
+        )
+        INSERT INTO login_attempts (user_id)
+            SELECT user_id
+            FROM rows
+            RETURNING user_id;
         '''
         vals = (username, pw_hash, email)
         cur.execute(sql, vals)

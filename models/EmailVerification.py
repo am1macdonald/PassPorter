@@ -12,6 +12,7 @@ class DBEmailVerification(DBModel):
     verification_status: bool
     confirmation_date: datetime | None = None
     attempts: int
+    isValid: bool
 
 
 class EmailVerification:
@@ -41,10 +42,35 @@ class EmailVerification:
     def exists(self):
         return self._underlying is not None
 
+    def is_valid(self):
+        return self._underlying.isValid
+
+    def is_expired(self):
+        return self._underlying.expiration_date < datetime.now()
+
     def get_link(self):
         if not self._underlying:
             raise ValueError("Token does not exist")
         return f'{os.environ["BASE_URL"]}/verify-email/{self._underlying.confirmation_token}'
+
+    def consume(self):
+        cur = self._conn.cursor()
+        sql = '''
+        UPDATE public.email_verification
+        SET verification_status = true,
+        confirmation_date = Now(),
+        attempts = attempts + 1
+        WHERE "confirmation_token" = %s
+        RETURNING *;
+        '''
+        vals = (self._underlying.confirmation_token,)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            self._conn.commit()
+        else:
+            self._conn.rollback()
+        return res is not None
 
     def _fetch(self):
         cur = self._conn.cursor()

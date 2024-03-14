@@ -15,6 +15,7 @@ from resolvers.Redirect import RedirectResolver
 from resolvers.ResetPassword import PasswordResetResolver
 from resolvers.Sign_In import SigninResolver
 from resolvers.Sign_Up import SignupResolver
+from resolvers.VerifyEmail import VerifyEmailTokenResolver
 from sessions.database import db
 from sessions.mail import mailer
 
@@ -131,3 +132,7 @@ async def allow_access(request: Request):
 @app.post("/get-token")
 async def get_token(request: Request, item: TokenRequest, conn=Depends(get_connection)):
     return GetTokenResolver(request, templates, conn).resolve(item)
+
+@app.get("/verify-email/{token}")
+async def verify_email(request: Request, token: str, conn=Depends(get_connection)):
+    return VerifyEmailTokenResolver(request, conn=conn).resolve(token)
