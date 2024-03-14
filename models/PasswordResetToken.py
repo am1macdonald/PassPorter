@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from pydantic import SecretStr
@@ -32,7 +33,8 @@ class PasswordResetToken:
             sql = 'select * from "password_reset" where "reset_token"=%s and "is_valid"=true order by id desc limit 1;'
             vals = (self.token_str.get_secret_value(),)
         cur.execute(sql, vals)
-        return cur.fetchone()
+        res = cur.fetchone()
+        return DBToken.from_row(res) if res else None
 
     def exists(self) -> bool:
         return self.token is not None and self.token.is_valid
@@ -46,6 +48,11 @@ class PasswordResetToken:
             self._conn.commit()
         else:
             self._conn.rollback()
+
+    def get_link(self):
+        if not self.token:
+            raise ValueError("Token does not exist")
+        return f'{os.environ["BASE_URL"]}/reset-password/{self.token.reset_token.get_secret_value()}'
 
     def add(self) -> bool:
         cur = self._conn.cursor()

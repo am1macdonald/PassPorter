@@ -73,7 +73,7 @@ class User:
         WHERE user_id=%s
         RETURNING password_hash; 
         '''
-        vals = (self._hash_password(password.get_secret_value()), self.user.user_id,)
+        vals = (self._hash_password(password), self.user.user_id,)
         cur.execute(sql, vals)
         res = cur.fetchone()
         if bcrypt.checkpw(password.get_secret_value().encode(), res[0].encode()):

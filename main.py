@@ -93,8 +93,9 @@ async def forgot_password_page(request: Request):
 
 
 @app.post("/forgot-password", response_class=HTMLResponse)
-async def forgot_password_response(email: Annotated[str, Form()], request: Request, conn=Depends(get_connection)):
-    return PasswordResetResolver(request, templates, conn).resolve_request(email)
+async def forgot_password_response(email: Annotated[str, Form()], request: Request, conn=Depends(get_connection),
+                                   mailer=Depends(get_mailer) ):
+    return PasswordResetResolver(request, templates, conn=conn, mailer=mailer).resolve_post(email)
 
 
 @app.get("/reset-password/{token_id}", response_class=HTMLResponse)
@@ -132,6 +133,7 @@ async def allow_access(request: Request):
 @app.post("/get-token")
 async def get_token(request: Request, item: TokenRequest, conn=Depends(get_connection)):
     return GetTokenResolver(request, templates, conn).resolve(item)
+
 
 @app.get("/verify-email/{token}")
 async def verify_email(request: Request, token: str, conn=Depends(get_connection)):
