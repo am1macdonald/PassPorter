@@ -25,8 +25,9 @@ class PasswordResetResolver:
                                                             "error_message": str(e),
                                                             "email": email})
 
-        user: DBUser = User(email=email, conn=self._conn).get_user()
-        if not user:
+        user = User(email=email, conn=self._conn)
+
+        if not user.get_user():
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/forgot-password.jinja2',
                                                    context={"to_extend": 'empty.jinja2', "invalid_email": 1,
@@ -44,7 +45,7 @@ class PasswordResetResolver:
                                                             "error_message": "failed",
                                                             "email": email})
 
-        # TODO: send request to emailer to with reset link
+        user.reset_attempts()
         message = f"""
         PassPorter
         

@@ -83,6 +83,24 @@ class User:
             self._conn.rollback()
             return False
 
+    def reset_attempts(self):
+        cur = self._conn.cursor()
+        sql = '''
+        UPDATE public.login_attempts
+        SET attempts=0
+        WHERE user_id=%s
+        RETURNING *; 
+        '''
+        vals = (self.user.user_id,)
+        cur.execute(sql, vals)
+        res = cur.fetchone()
+        if res:
+            self._conn.commit()
+            return True
+        else:
+            self._conn.rollback()
+            return False
+
     def exists(self):
         return self.user is not None
 

@@ -17,17 +17,8 @@ class Authorize:
         self.db_client = self.client.get() if self.client else None
         self.user_token = self.request.cookies.get("token")
 
-    def resolve_get(self, *args):
-        client_err = self._check_client()
-        if client_err and client_err.get('error'):
-            return client_err
-
-        if not self.user_token:
-            url_string = f'/sign-in?{self.request.query_params}&next="{self.request.base_url}authorize"'
-            response = RedirectResponse(url=url_string)
-            return response
-
-        return RedirectResponse(f"/consent?{self.request.query_params}", status_code=303)
+    def resolve_get(self):
+        return self._resolve()
 
     def resolve_post(self, authorized):
         if authorized != "authorized":
@@ -37,9 +28,7 @@ class Authorize:
             return client_err
 
         if not self.user_token:
-            url_string = f'/sign-in?{self.request.query_params}&next="{self.request.base_url}authorize"'
-            response = RedirectResponse(url=url_string, status_code=303)
-            return response
+            return self._redirect_to_sign_in()
 
         user = User(token=self.user_token, conn=self._conn)
         if user.get_user() is None:
@@ -53,6 +42,20 @@ class Authorize:
             response = RedirectResponse(url=f"/redirect?authorization={auth_code}&redirect_uri={self.redirect}",
                                         status_code=303)
             return response
+
+    def _resolve(self):
+        client_err = self._check_client()
+        if client_err and client_err.get('error'):
+            return client_err
+
+        if not self.user_token:
+            return self._redirect_to_sign_in()
+
+        return RedirectResponse(f"/consent?{self.request.query_params}", status_code=303)
+
+    def _redirect_to_sign_in(self):
+        url_string = f'/sign-in?{self.request.query_params}'
+        return RedirectResponse(url=url_string)
 
     def _check_client(self):
         if not self.client:

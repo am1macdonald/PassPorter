@@ -27,7 +27,7 @@ class SigninResolver:
         except EmailNotValidError as e:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
-                                                   context={"to_extend": 'empty.jinja2', "invalid_email": 1,
+                                                   context={"to_extend": 'index.jinja2', "invalid_email": 1,
                                                             "error_message": str(e),
                                                             "email": email})
         user = User(conn=self.conn, email=email)
@@ -35,13 +35,13 @@ class SigninResolver:
         if user_value.attempts > 3:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
-                                                   context={"to_extend": 'empty.jinja2', "invalid_email": 1,
+                                                   context={"to_extend": 'index.jinja2', "invalid_email": 1,
                                                             "error_message": "Account locked: Too many attempts",
                                                             "email": email})
         if not user_value:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
-                                                   context={"to_extend": 'empty.jinja2', "invalid_email": 1,
+                                                   context={"to_extend": 'index.jinja2', "invalid_email": 1,
                                                             "error_message": "A user with this email does not exist",
                                                             "email": email})
 
@@ -49,7 +49,7 @@ class SigninResolver:
             user.add_attempt()
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
-                                                   context={"to_extend": 'empty.jinja2', "invalid_password": 1,
+                                                   context={"to_extend": 'index.jinja2', "invalid_password": 1,
                                                             "error_message": "Wrong password",
                                                             "email": email})
 

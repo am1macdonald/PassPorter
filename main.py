@@ -94,7 +94,7 @@ async def forgot_password_page(request: Request):
 
 @app.post("/forgot-password", response_class=HTMLResponse)
 async def forgot_password_response(email: Annotated[str, Form()], request: Request, conn=Depends(get_connection),
-                                   mailer=Depends(get_mailer) ):
+                                   mailer=Depends(get_mailer)):
     return PasswordResetResolver(request, templates, conn=conn, mailer=mailer).resolve_post(email)
 
 
@@ -110,9 +110,8 @@ async def reset_password(uuid: Annotated[SecretStr, Form()], password: Annotated
 
 
 @app.get("/authorize")
-async def authorize(request: Request, client_id: str, redirect_uri: str, response_type: str, scope: str,
-                    conn=Depends(get_connection)):
-    return Authorize(request, templates, conn).resolve_get(client_id, redirect_uri, response_type, scope)
+async def authorize(request: Request, conn=Depends(get_connection)):
+    return Authorize(request, templates, conn).resolve_get()
 
 
 @app.post("/authorize")
