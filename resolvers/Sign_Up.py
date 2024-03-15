@@ -81,4 +81,5 @@ class SignupResolver:
         self._mailer.send_mail(msg=composed, recipients=[email])
 
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
-                                               context={"message": "A confirmation email has been sent to your inbox."})
+                                               context={"to_extend": "index.jinja2",
+                                                        "message": "A confirmation email has been sent to your inbox."})

@@ -2,7 +2,7 @@
 
 {% block content %}
     <div id="target" class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form hx-post="/sign-up" hx-target="#target" hx-swap="outerHTML" class="flex flex-col gap-4">
+        <form action="/sign-up" method="post" class="flex flex-col gap-4">
             {% if invalid_email %}
                 <div>
                     <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>

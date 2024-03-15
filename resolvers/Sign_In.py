@@ -5,7 +5,6 @@ from fastapi.responses import RedirectResponse
 from pydantic import EmailStr
 from pydantic import SecretStr
 
-from controllers.DatabaseController import DatabaseController
 from models.User import User, DBUser
 
 
@@ -32,17 +31,17 @@ class SigninResolver:
                                                             "email": email})
         user = User(conn=self.conn, email=email)
         user_value: DBUser = user.get_user()
+        if not user.exists():
+            return self.templates.TemplateResponse(request=self.request,
+                                                   name='forms/sign-in.jinja2',
+                                                   context={"to_extend": 'index.jinja2', "invalid_email": 1,
+                                                            "error_message": "A user with this email does not exist",
+                                                            "email": email})
         if user_value.attempts > 3:
             return self.templates.TemplateResponse(request=self.request,
                                                    name='forms/sign-in.jinja2',
                                                    context={"to_extend": 'index.jinja2', "invalid_email": 1,
                                                             "error_message": "Account locked: Too many attempts",
-                                                            "email": email})
-        if not user_value:
-            return self.templates.TemplateResponse(request=self.request,
-                                                   name='forms/sign-in.jinja2',
-                                                   context={"to_extend": 'index.jinja2', "invalid_email": 1,
-                                                            "error_message": "A user with this email does not exist",
                                                             "email": email})
 
         if not self._check_password(password, user_value.password_hash):
@@ -63,4 +62,5 @@ class SigninResolver:
             return response
 
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
-                                               context={"message": f"Welcome {user_value.username}!"})
+                                               context={"to_extend": "index.jinja2",
+                                                        "message": f"Welcome {user_value.username}!"})

@@ -4,7 +4,7 @@ from datetime import datetime
 from pydantic import SecretStr
 
 from models.BaseDBModel import DBModel
-from models.User import DBUser
+from models.User import DBUser, User
 
 
 class DBToken(DBModel):
@@ -16,7 +16,7 @@ class DBToken(DBModel):
 
 
 class PasswordResetToken:
-    def __init__(self, user: DBUser | None = None, token_str: SecretStr | None = None, conn=None):
+    def __init__(self, user: User | None = None, token_str: SecretStr | None = None, conn=None):
         self._conn = conn
         self.user = user
         self.token_str = token_str

@@ -4,7 +4,7 @@ from pydantic import EmailStr, SecretStr, ValidationError
 
 from models.Password import Password
 from models.PasswordResetToken import PasswordResetToken
-from models.User import DBUser, User
+from models.User import User
 
 
 class PasswordResetResolver:
@@ -56,7 +56,8 @@ class PasswordResetResolver:
         self._mailer.send_mail(msg=composed, recipients=[email])
 
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
-                                               context={"message": f"A link has been sent to your email inbox."})
+                                               context={"to_extend": "index.jinja2",
+                                                        "message": f"A link has been sent to your email inbox."})
 
     def resolve_get_reset(self, token_str: SecretStr):
         valid = False
@@ -98,4 +99,5 @@ class PasswordResetResolver:
             raise ValueError('unable to update')
         token.invalidate()
         return self.templates.TemplateResponse(request=self.request, name="views/success.jinja2",
-                                               context={"message": "Your password has been updated", "link_back": 1})
+                                               context={"to_extend": "index.jinja2",
+                                                        "message": "Your password has been updated", "link_back": 1})
