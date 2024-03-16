@@ -1,6 +1,6 @@
 # Pass Porter
 
-Pass Porter is an Authentication Platform built with Python, SQL, JavaScript, and NPM.
+Pass Porter is an Authentication Platform built with Python + FastAPI and PostgreSQL (plus JavaScript, and NPM for Tailwind).
 
 ## Installation
 
@@ -8,7 +8,7 @@ Provide instructions on how to install your project. For example:
 
 1. Clone the repository:
     ```
-    git clone https://github.com/username/repository.git
+    git@github.com:am1macdonald/PassPorter.git
     ```
 
 2. Navigate to the project directory:
@@ -49,10 +49,10 @@ I haven't done this yet, but I plan to use Nginx as a reverse proxy for this pro
 - [x] Add a database to store user information
 - [x] Add a way to reset passwords
 - [x] Add a way to verify email addresses
-- [ ] Build emailer to deliver verification links
+- [x] Build emailer to deliver verification links
 - [x] Add a way to manage user sessions using JWT
 - [x] Add authorization endpoint
-- [ ] Add a get token endpoint
+- [x] Add a get token endpoint
 - [ ] Transition from HS256 to RS256 for JWT encoding
 
 ## Contributing
@@ -70,10 +70,7 @@ Me, myself, and I.
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Contact
-
-My GitHub username is `@am1macdonald`. You can find me at
 
 ## Project Status
 
-This project is currently in development.
+This project is "finished" but pending optimization.
